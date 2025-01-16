@@ -1,7 +1,7 @@
 @props(['isHover' => false,'isStriped' => false])
 
-<tr @class([ 'hover:bg-neutral-100 dark:hover:bg-neutral-700'=> $isHover,
-    'odd:bg-white even:bg-neutral-100 dark:odd:bg-neutral-900 dark:even:bg-neutral-800' => $isStriped
+<tr @class([ 'hover:bg-gray-100 dark:hover:bg-gray-700'=> $isHover,
+    'odd:bg-white even:bg-gray-100 dark:odd:bg-gray-900 dark:even:bg-gray-800' => $isStriped
     ])>
     {{ $slot }}
 </tr>

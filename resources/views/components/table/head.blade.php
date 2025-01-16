@@ -1,3 +1,3 @@
-<thead {{ $attributes->class('bg-neutral-50 dark:bg-neutral-700')}}>
+<thead {{ $attributes->class('bg-gray-50 dark:bg-gray-700')}}>
     {{ $slot }}
 </thead>

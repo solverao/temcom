@@ -4,7 +4,8 @@ namespace Solverao\Temcom\Console;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
-
+use RuntimeException;
+use Symfony\Component\Process\Process;
 class InstallTemcomPackage extends Command
 {
     protected $signature = 'temcom:install';
@@ -15,6 +16,42 @@ class InstallTemcomPackage extends Command
     {
         $this->info('Installing temcomPackage...');
 
+        $this->publishingConfigurationFile();
+        $this->installingJetstream();
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:tailwind-config',
+            '--force' => true,
+        ]);
+
+        // $this->info('Ejecutando migraciones...');
+        // $this->call('migrate');
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:js',
+            '--force' => true,
+        ]);
+
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:layout:app',
+            '--force' => true,
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:layout:guest',
+            '--force' => true,
+        ]);
+
+        // // Instalar dependencias de NPM
+        $this->info('Instalando dependencias de NPM...');     // // exec('npm nstall preline');
+        $this->runCommands(['npm install preline', 'npm run build']);
+
+        $this->info('Installed temcomPackage');
+    }
+
+    private function publishingConfigurationFile()
+    {
         $this->info('Publishing configuration...');
 
         // File config
@@ -29,7 +66,10 @@ class InstallTemcomPackage extends Command
                 $this->info('Existing configuration was not overwritten');
             }
         }
+    }
 
+    function installingJetstream()
+    {
         $this->info('Instalando Jetstream con Livewire y configuración personalizada...');
         // Jetstream install
         $this->call('jetstream:install', [
@@ -37,25 +77,6 @@ class InstallTemcomPackage extends Command
             '--dark' => true,
             '--pest' => true,
         ]);
-
-        // Instalar dependencias de NPM
-        $this->info('Instalando dependencias de NPM...');
-        exec('npm install preline');
-
-        $this->call('vendor:publish', [
-            '--tag' => 'tailwind-config',
-            '--force' => true,
-        ]);
-
-        // $this->info('Ejecutando migraciones...');
-        // $this->call('migrate');
-
-        $this->call('vendor:publish', [
-            '--tag' => 'js',
-            '--force' => true,
-        ]);
-
-        $this->info('Installed temcomPackage');
     }
 
     private function configExists($fileName)
@@ -75,7 +96,7 @@ class InstallTemcomPackage extends Command
     {
         $params = [
             '--provider' => "Solverao\Temcom\TemcomServiceProvider",
-            '--tag' => "config"
+            '--tag' => "temcom:config"
         ];
 
         if ($forcePublish === true) {
@@ -83,5 +104,14 @@ class InstallTemcomPackage extends Command
         }
 
         $this->call('vendor:publish', $params);
+    }
+
+    protected function runCommands($commands)
+    {
+        $process = Process::fromShellCommandline(implode(' && ', $commands), null, null, null, null);
+
+        $process->run(function ($type, $line) {
+            $this->info('    ' . $line);
+        });
     }
 }

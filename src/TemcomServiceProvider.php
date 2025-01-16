@@ -29,6 +29,7 @@ class TemcomServiceProvider extends ServiceProvider
             $this->registerCommands();
             $this->publishesTailwindConfig();
             $this->publishesResourceJs();
+            $this->publishesLayouts();
 
             // $this->publishesTransaltions();
 
@@ -86,35 +87,46 @@ class TemcomServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../config/config.php' => config_path('temcom.php'),
-        ], 'config');
+        ], 'temcom:config');
     }
 
     private function publishesTailwindConfig()
     {
         $this->publishes([
             __DIR__ . '/../config/tailwind.config.js' => base_path('tailwind.config.js'),
-        ], 'tailwind-config');
+        ], 'temcom:tailwind-config');
     }
 
     private function publishesViews()
     {
         $this->publishes([
             __DIR__ . '/../resources/views' => resource_path('views/vendor/temcom'),
-        ], 'views');
+        ], 'temcom:views');
     }
 
     private function publishesTransaltions()
     {
         $this->publishes([
             __DIR__ . '/../resources/lang' => resource_path('lang/vendor/temcom'),
-        ], 'lang');
+        ], 'temcom:lang');
     }
 
     private function publishesResourceJs()
     {
         $this->publishes([
             __DIR__ . '/../resources/js/app.js' => resource_path('js/app.js'),
-        ], 'js');
+        ], 'temcom:js');
+    }
+
+    private function publishesLayouts()
+    {
+        $this->publishes([
+            __DIR__ . '/../resources/views/layouts/app.blade.php' => resource_path('views/layouts/app.blade.php'),
+        ], 'temcom:layout:app');
+
+        $this->publishes([
+            __DIR__ . '/../resources/views/layouts/guest.blade.php' => resource_path('views/layouts/guest.blade.php'),
+        ], 'temcom:layout:guest');
     }
 
     private function registerViewComposers()

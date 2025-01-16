@@ -1,22 +1,15 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{
-    darkMode: localStorage.getItem('dark_mode') === null ?
-        (window.matchMedia('(prefers-color-scheme: dark)').matches ? true : false) :
-        localStorage.getItem('dark_mode') === 'true'
-}" :class="{ 'dark': darkMode }">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" x-data="{ darkMode: localStorage.getItem('dark_mode') === null
+? (window.matchMedia('(prefers-color-scheme: dark)').matches ? true : false)
+: localStorage.getItem('dark_mode') === 'true' }" :class="{ 'dark': darkMode }">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>
-        @yield('title_prefix', config('temcom.title_prefix', ''))
-        @yield('title', config('temcom.title', 'Temcom'))
-        @yield('title_postfix', config('temcom.title_postfix', ''))
-    </title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Prevenir parpadeo cargando el estado inicial del tema -->
     <script>
         const darkMode = localStorage.getItem('dark_mode') === null
             ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? true : false)
@@ -29,15 +22,9 @@
             }
     </script>
 
-    @yield('temcom_css')
-
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
-        rel="stylesheet">
-
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -46,15 +33,17 @@
     @livewireStyles
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900">
+<body class="relative">
 
-    @yield('body')
+    <div class="absolute top-4 right-4 px-4 py-2">
+        <x-temcom::theme-toggle></x-temcom::theme-toggle>
+    </div>
 
-    @stack('modals')
+    <div class="font-sans text-gray-900 dark:text-gray-100 antialiased">
+        {{ $slot }}
+    </div>
 
     @livewireScripts
-
-    @yield('temcom_js')
 </body>
 
 </html>

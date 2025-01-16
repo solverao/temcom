@@ -13,10 +13,9 @@ return [
     | Here you can change the default title of your project.
     |
     */
-    'title' => config('app.name'),
+    'title' => 'Temcom',
     'title_prefix' => '',
     'title_postfix' => '',
-
 
     /*
     |--------------------------------------------------------------------------
@@ -32,6 +31,29 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | URLs
+    |--------------------------------------------------------------------------
+    |
+    | Here we can modify the url settings.
+    |
+    |
+    */
+
+    'dashboard_route' => 'dashboard',
+
+    /*
+    |--------------------------------------------------------------------------
+    | Admin Panel Logo
+    |--------------------------------------------------------------------------
+    |
+    | Here you can change the application logo.
+    |
+    */
+
+    'logo' => 'Temcom',
+
+    /*
+    |--------------------------------------------------------------------------
     | Menu Items
     |--------------------------------------------------------------------------
     |
@@ -39,36 +61,24 @@ return [
 
     |
     */
+
+
     'menu' => [
-        [
-            'text' => 'Dashboard',
-            'icon' => 'fas-home',
-            'route' => 'dashboard',
-        ],
-        [
-            'text' => 'Admin',
-            'icon' => 'fas-shield-halved',
-            'can' => ['viewAny users', 'viewAny roles', 'viewAny logs'],
-            'submenu' => [
-                [
-                    'text' => 'Users',
-                    'icon' => 'fas-users',
-                    'url' => 'users.index',
-                    'can' => 'viewAny users',
-                ],
-                [
-                    'text' => 'Roles',
-                    'icon' => 'fas-user-lock',
-                    'url' => 'roles.index',
-                    'can' => 'viewAny roles',
-                ],
-                [
-                    'text' => 'Activity logs',
-                    'icon' => 'fas-file-lines',
-                    'url' => 'activities.index',
-                    'can' => 'viewAny logs',
-                ],
+
+        'sidebar' => [
+            [
+                'text' => 'Dashboard',
+                'icon' => 'fas-home',
+                'route' => 'dashboard',
             ],
         ],
-    ]
+
+        'header_dropdown' => [
+            [
+                'text' => 'Profile',
+                'icon' => 'far-user-circle',
+                'route' => 'profile.show',
+            ],
+        ]
+    ],
 ];
