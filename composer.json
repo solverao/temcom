@@ -1,0 +1,62 @@
+{
+    "name": "solverao/temcom",
+    "description": "Templates and components",
+    "keywords": [
+        "solverao",
+        "temcom"
+    ],
+    "homepage": "https://github.com/solverao/temcom",
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Saúl Olvera",
+            "email": "saul2olvera@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.2",
+        "livewire/livewire": "^3.5.18",
+        "khatabwedaa/blade-css-icons": "^1.4",
+        "laravel/jetstream": "^5.3",
+        "maatwebsite/excel": "^3.1",
+        "owenvoke/blade-fontawesome": "^2.8",
+        "spatie/laravel-activitylog": "^4.9",
+        "spatie/laravel-permission": "^6.10"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.9",
+        "pestphp/pest": "^3.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Solverao\\Temcom\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Solverao\\Temcom\\Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Solverao\\Temcom\\TemcomServiceProvider"
+            ],
+            "aliases": {
+                "Temcom": "Solverao\\Temcom\\TemcomFacade"
+            }
+        }
+    }
+}
