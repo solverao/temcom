@@ -1,8 +1,10 @@
 <x-temcom::sidebar.sidebar>
     <x-slot:header>
         
-        @include('temcom::partials.common.application-logo')
-
+        <a class="flex-none rounded-xl text-xl inline-block font-semibold focus:outline-none focus:opacity-80"
+            href="{{ route(config('temcom.dashboard_route')) }}">
+            <x-application-logo class="w-36 h-auto"></x-application-logo>
+        </a>
 
         <div class="lg:hidden -me-2">
             <!-- Close Button -->

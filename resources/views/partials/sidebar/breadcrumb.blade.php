@@ -14,7 +14,6 @@
         </button>
     </x-slot:navigationItems>
 
-    <x-temcom::breadcrumb.item>Home</x-temcom::breadcrumb.item>
-    <x-temcom::breadcrumb.last-item>Dashboard</x-temcom::breadcrumb.last-item>
+    {{ $breadcrumbItems ?? '' }}
 
 </x-temcom::breadcrumb>

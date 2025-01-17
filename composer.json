@@ -1,6 +1,6 @@
 {
     "name": "solverao/temcom",
-    "description": "Templates and components",
+    "description": "Laravel package for templates and components using the TALL stack",
     "keywords": [
         "solverao",
         "temcom"

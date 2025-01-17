@@ -1,6 +1,8 @@
 <x-temcom::header>
     <x-slot:logo>
-        @include('temcom::partials.common.application-logo')
+        <a href="{{ route(config('temcom.dashboard_route')) }}">
+            <x-application-mark class="block h-9 w-auto" />
+        </a>
     </x-slot:logo>
 
     <x-slot:itemsLeft>
@@ -9,11 +11,8 @@
 
 
     <x-slot:itemsRight>
+
         <x:temcom::theme-toggle></x:temcom::theme-toggle>
-
-        {{-- <x-temcom::header.circular-button icon="far-bell">Notifications</x-temcom::header.circular-button>
-
-        <x-temcom::header.circular-button icon="fas-list-check">Activity</x-temcom::header.circular-button> --}}
 
         @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
         <x-dropdown align="right" width="60">
