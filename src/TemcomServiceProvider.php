@@ -4,6 +4,7 @@ namespace Solverao\Temcom;
 
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Solverao\Temcom\Console\ConfigurePreline;
 use Solverao\Temcom\Console\InstallTemcomPackage;
 
 class TemcomServiceProvider extends ServiceProvider
@@ -27,16 +28,10 @@ class TemcomServiceProvider extends ServiceProvider
             $this->publishesConfig();
             $this->publishesViews();
             $this->registerCommands();
-            $this->publishesTailwindConfig();
-            $this->publishesResourceJs();
             $this->publishesLayouts();
+            $this->publishesAssets();
 
             // $this->publishesTransaltions();
-
-            // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/temcom'),
-            ], 'assets');*/
         }
 
         $this->registerViewComposers();
@@ -79,7 +74,8 @@ class TemcomServiceProvider extends ServiceProvider
     private function registerCommands()
     {
         $this->commands([
-            InstallTemcomPackage::class
+            InstallTemcomPackage::class,
+            ConfigurePreline::class
         ]);
     }
 
@@ -88,13 +84,6 @@ class TemcomServiceProvider extends ServiceProvider
         $this->publishes([
             __DIR__ . '/../config/config.php' => config_path('temcom.php'),
         ], 'temcom:config');
-    }
-
-    private function publishesTailwindConfig()
-    {
-        $this->publishes([
-            __DIR__ . '/../config/tailwind.config.js' => base_path('tailwind.config.js'),
-        ], 'temcom:tailwind-config');
     }
 
     private function publishesViews()
@@ -111,12 +100,14 @@ class TemcomServiceProvider extends ServiceProvider
         ], 'temcom:lang');
     }
 
-    private function publishesResourceJs()
+    private function publishesAssets()
     {
-        $this->publishes([
-            __DIR__ . '/../resources/js/app.js' => resource_path('js/app.js'),
-        ], 'temcom:js');
+            // Publishing assets.
+            $this->publishes([
+                __DIR__ . '/../resources/js' => public_path('vendor/temcom/js'),
+            ], 'temcom:assets');
     }
+
 
     private function publishesLayouts()
     {

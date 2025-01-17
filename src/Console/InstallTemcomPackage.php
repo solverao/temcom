@@ -14,40 +14,24 @@ class InstallTemcomPackage extends Command
 
     public function handle()
     {
-        $this->info('Installing temcomPackage...');
+        $this->info('Installing temcom package...');
 
         $this->publishingConfigurationFile();
-        $this->installingJetstream();
 
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:tailwind-config',
-            '--force' => true,
-        ]);
+        $this->installingJetstream();
 
         // $this->info('Ejecutando migraciones...');
         // $this->call('migrate');
 
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:js',
-            '--force' => true,
-        ]);
+        $this->publishingAppLayout();
 
+        $this->publishingGuestLayout();
 
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:layout:app',
-            '--force' => true,
-        ]);
-
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:layout:guest',
-            '--force' => true,
-        ]);
-
-        // // Instalar dependencias de NPM
-        $this->info('Instalando dependencias de NPM...');     // // exec('npm nstall preline');
+        $this->info('Installing NPM Dependencies...');
+        $this->call('temcom:config:preline');    // // exec('npm nstall preline');
         $this->runCommands(['npm install preline', 'npm run build']);
 
-        $this->info('Installed temcomPackage');
+        $this->info('Installed temcom package');
     }
 
     private function publishingConfigurationFile()
@@ -55,7 +39,7 @@ class InstallTemcomPackage extends Command
         $this->info('Publishing configuration...');
 
         // File config
-        if (! $this->configExists('temcom.php')) {
+        if (! File::exists(config_path('temcom.php'))) {
             $this->publishConfiguration();
             $this->info('Published configuration');
         } else {
@@ -68,20 +52,35 @@ class InstallTemcomPackage extends Command
         }
     }
 
+    private function publishingAppLayout()
+    {
+        $this->info('Publishing app layout...');
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:layout:app',
+            '--force' => true,
+        ]);
+    }
+
+    private function publishingGuestLayout()
+    {
+        $this->info('Publishing guest layout...');
+
+        $this->call('vendor:publish', [
+            '--tag' => 'temcom:layout:guest',
+            '--force' => true,
+        ]);
+    }
+
     function installingJetstream()
     {
-        $this->info('Instalando Jetstream con Livewire y configuración personalizada...');
+        $this->info('Installing Jetstream with Livewire...');
         // Jetstream install
         $this->call('jetstream:install', [
             'stack' => 'livewire',
             '--dark' => true,
             '--pest' => true,
         ]);
-    }
-
-    private function configExists($fileName)
-    {
-        return File::exists(config_path($fileName));
     }
 
     private function shouldOverwriteConfig()
