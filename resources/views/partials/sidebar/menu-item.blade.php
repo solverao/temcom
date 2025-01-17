@@ -1,6 +1,5 @@
 @inject('sidebarItemHelper', 'Solverao\Temcom\Helpers\SidebarItemHelper')
 
-
 @if($sidebarItemHelper->isSubmenu($item))
 
 <x-temcom::sidebar.item-accordion icon="{{ $sidebarItemHelper->getIcon($item) }}"

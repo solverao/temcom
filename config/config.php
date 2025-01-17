@@ -73,7 +73,7 @@ return [
             ],
         ],
 
-        'header_dropdown' => [
+        'account_dropdown' => [
             [
                 'text' => 'Profile',
                 'icon' => 'far-user-circle',

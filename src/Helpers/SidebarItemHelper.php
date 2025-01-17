@@ -4,58 +4,9 @@ namespace Solverao\Temcom\Helpers;
 
 use Illuminate\Support\Facades\Gate;
 
-class SidebarItemHelper
+class SidebarItemHelper extends MenuItemHelper
 {
-    /**
-     * Checks if a menu item is a header.
-     *
-     * @param  mixed  $item
-     * @return bool
-     */
-    public static function isHeader($item)
-    {
-        return is_string($item) || isset($item['header']);
-    }
-
-    /**
-     * Checks if a menu item is a link.
-     *
-     * @param  mixed  $item
-     * @return bool
-     */
-    public static function isLink($item)
-    {
-        return isset($item['text'])
-            && (isset($item['url']) || isset($item['route']));
-    }
-
-    /**
-     * Checks if a menu item is a submenu.
-     *
-     * @param  mixed  $item
-     * @return bool
-     */
-    public static function isSubmenu($item)
-    {
-        return isset($item['text'], $item['submenu'])
-            && is_array($item['submenu']);
-    }
-
-    public function getIcon(array $item): string|null
-    {
-        return data_get($item, 'icon') ?? null;
-    }
-
-    public function getText(array $item): string
-    {
-        return __(data_get($item, 'text')) ?? '';
-    }
-
-    public function getRoute(array $item): string
-    {
-        return data_get($item, 'url') ?? route(data_get($item, 'route')) ?? '';
-    }
-
+    // TODO ESTA PARTE SE QUITARA Y SE DEBE DE PASAR AL MENU BUILDER EN LA CLASE TEMCOM
     public function checkPermission(array $item): bool
     {
         if (empty($item['can'])) {
