@@ -31,22 +31,36 @@ class ConfigurePreline extends Command
             $content = file_get_contents($tailwindConfigPath);
             $newConfig = "\"node_modules/preline/dist/*.js\"";
             $newPlugin = "require(\"preline/plugin\")";
+
+
+            $search = 'export default {';
+            $newLine = "    darkMode: 'class',";
+            if (strpos($content, $search) !== false && strpos($content, $newLine) === false) {
+                $content = str_replace(
+                    $search,
+                    $search . PHP_EOL . $newLine,
+                    $content
+                );
+            }
+            
             if (!str_contains($content, $newConfig)) {
                 $content = preg_replace(
                     "/content:\s*\[([^\]]+)\]/",
                     "content: [\${1}, $newConfig]",
                     $content
                 );
+            }
 
+            if (!str_contains($content, $newPlugin)) {
                 $content = preg_replace(
                     "/plugins:\s*\[([^\]]+)\]/",
                     "plugins: [\${1}, $newPlugin]",
                     $content
                 );
-
-                file_put_contents($tailwindConfigPath, $content);
-                $this->info("Added preline to tailwind.config.js");
             }
+
+            file_put_contents($tailwindConfigPath, $content);
+            $this->info("Added preline to tailwind.config.js");
         }
 
         $this->info("Complete preline configuration");
