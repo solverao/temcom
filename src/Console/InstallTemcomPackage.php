@@ -6,9 +6,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use RuntimeException;
 use Symfony\Component\Process\Process;
+
 class InstallTemcomPackage extends Command
 {
-    protected $signature = 'temcom:install';
+    protected $signature = 'temcom:install {--layout : Indicate that layouts should be installed.}
+                                            {--only_layout : To install only specific resources: assets, config, translations, auth_views, auth_routes, main_views or components.}';
 
     protected $description = 'Install the temcom package';
 
@@ -16,16 +18,23 @@ class InstallTemcomPackage extends Command
     {
         $this->info('Installing temcom package...');
 
-        $this->publishingConfigurationFile();
+        if ($this->option('only_layout')) {
+            $this->publishingAppLayout(true);
+            $this->publishingGuestLayout(true);
+            return;
+        }
 
+        if ($this->option('layout')) {
+            $this->publishingAppLayout(true);
+            $this->publishingGuestLayout(true);
+        }
+
+        $this->publishingConfigurationFile();
+        
         $this->installingJetstream();
 
         // $this->info('Ejecutando migraciones...');
         // $this->call('migrate');
-
-        $this->publishingAppLayout();
-
-        $this->publishingGuestLayout();
 
         $this->info('Installing NPM Dependencies...');
         $this->call('temcom:config:preline');    // // exec('npm nstall preline');
@@ -50,26 +59,6 @@ class InstallTemcomPackage extends Command
                 $this->info('Existing configuration was not overwritten');
             }
         }
-    }
-
-    private function publishingAppLayout()
-    {
-        $this->info('Publishing app layout...');
-
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:layout:app',
-            '--force' => true,
-        ]);
-    }
-
-    private function publishingGuestLayout()
-    {
-        $this->info('Publishing guest layout...');
-
-        $this->call('vendor:publish', [
-            '--tag' => 'temcom:layout:guest',
-            '--force' => true,
-        ]);
     }
 
     function installingJetstream()
@@ -102,7 +91,7 @@ class InstallTemcomPackage extends Command
             $params['--force'] = true;
         }
 
-        $this->call('vendor:publish', $params);
+        $this->callSilent('vendor:publish', $params);
     }
 
     protected function runCommands($commands)
@@ -112,5 +101,35 @@ class InstallTemcomPackage extends Command
         $process->run(function ($type, $line) {
             $this->info('    ' . $line);
         });
+    }
+
+    private function publishingAppLayout($forcePublish  = false)
+    {
+        $this->info('Publishing app layout...');
+
+        $params = [
+            '--tag' => "temcom:layout-app",
+        ];
+
+        if ($forcePublish === true) {
+            $params['--force'] = true;
+        }
+
+        $this->call('vendor:publish', $params);
+    }
+
+    private function publishingGuestLayout($forcePublish = false)
+    {
+        $this->info('Publishing guest layout...');
+
+        $params = [
+            '--tag' => "temcom:layout-guest",
+        ];
+
+        if ($forcePublish === true) {
+            $params['--force'] = true;
+        }
+
+        $this->call('vendor:publish', $params);
     }
 }

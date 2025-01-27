@@ -11,7 +11,7 @@
 
     <x-slot:itemsRight>
         
-        <x:temcom::theme-toggle></x:temcom::theme-toggle>
+        <x-temcom::theme-toggle />
 
         @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
         <x-dropdown align="right" width="60">

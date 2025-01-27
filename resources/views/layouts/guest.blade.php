@@ -36,7 +36,7 @@
 <body class="relative">
 
     <div class="absolute top-4 right-4 px-4 py-2">
-        <x-temcom::theme-toggle></x-temcom::theme-toggle>
+        <x-temcom::theme-toggle />
     </div>
 
     <div class="font-sans text-gray-900 dark:text-gray-100 antialiased">

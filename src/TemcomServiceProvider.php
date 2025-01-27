@@ -2,10 +2,12 @@
 
 namespace Solverao\Temcom;
 
+use Livewire\Livewire;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Solverao\Temcom\Console\ConfigurePreline;
 use Solverao\Temcom\Console\InstallTemcomPackage;
+use Solverao\Temcom\Http\Livewire\TopNavigationMenu;
 
 class TemcomServiceProvider extends ServiceProvider
 {
@@ -16,9 +18,6 @@ class TemcomServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /*
-         * Optional methods to load your package assets
-         */
         // $this->loadTranslations();
         $this->loadViews();
         // $this->loadMigrations();
@@ -35,6 +34,8 @@ class TemcomServiceProvider extends ServiceProvider
         }
 
         $this->registerViewComposers();
+
+        $this->registerLivewireComponents();
     }
 
     /**
@@ -102,7 +103,6 @@ class TemcomServiceProvider extends ServiceProvider
 
     private function publishesAssets()
     {
-            // Publishing assets.
             $this->publishes([
                 __DIR__ . '/../resources/js' => public_path('vendor/temcom/js'),
             ], 'temcom:assets');
@@ -113,20 +113,22 @@ class TemcomServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__ . '/../resources/views/layouts/app.blade.php' => resource_path('views/layouts/app.blade.php'),
-        ], 'temcom:layout:app');
+        ], 'temcom:layout-app');
 
         $this->publishes([
             __DIR__ . '/../resources/views/layouts/guest.blade.php' => resource_path('views/layouts/guest.blade.php'),
-        ], 'temcom:layout:guest');
+        ], 'temcom:layout-guest');
     }
 
     private function registerViewComposers()
     {
-        // Bind the AdminLte singleton instance into each adminlte page view.
-
         View::composer('temcom::page', function (\Illuminate\View\View $v) {
             $v->with('temcom', $this->app->make(Temcom::class));
         });
+    }
+
+    Private function registerLivewireComponents(){
+        //
     }
 
 }
