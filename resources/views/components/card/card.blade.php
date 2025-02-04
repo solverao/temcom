@@ -1,8 +1,7 @@
 @props(['title','subtitle'])
 
 <div {{ $attributes->merge([
-    'class' => 'flex flex-col bg-white border border-gray-200 shadow-sm rounded-xl p-4 md:p-5 dark:bg-gray-900
-    dark:border-gray-700 dark:text-gray-400'
+    'class' => 'flex flex-col bg-white border shadow-sm rounded-xl p-4 md:p-5 dark:bg-gray-800 dark:border-gray-700 dark:shadow-gray-700'
     ]) }}>
 
     @isset($title)

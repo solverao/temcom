@@ -1,4 +1,6 @@
-<x-banner />
+<div class="w-full lg:ps-64">
+    <x-banner />
+</div>
 
 @include('temcom::partials.sidebar.header')
 @include('temcom::partials.sidebar.breadcrumb')
