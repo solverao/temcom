@@ -88,7 +88,7 @@
                     {{ __('Manage Account') }}
                 </div>
 
-                @each('temcom::partials.sidebar.account-dropdown-item', $temcom->menu('account_dropdown'), 'item')
+                @each('temcom::partials.sidebar.account-dropdown-item', $temcom->menu('account'), 'item')
 
                 @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                 <x-dropdown-link href="{{ route('api-tokens.index') }}">

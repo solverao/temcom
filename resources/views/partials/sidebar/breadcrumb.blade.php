@@ -1,5 +1,5 @@
-<x-temcom::breadcrumb>
-    <x-slot:navigationItems>
+<x-temcom::breadcrumb class="sm:hidden">
+    <x-slot:items>
         <button type="button"
             class="size-8 flex justify-center items-center gap-x-2 border border-gray-200 text-gray-800 hover:text-gray-500 rounded-lg focus:outline-none focus:text-gray-500 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-gray-200 dark:hover:text-gray-500 dark:focus:text-gray-500"
             aria-haspopup="dialog" aria-expanded="false" aria-controls="hs-application-sidebar"
@@ -12,7 +12,7 @@
                 <path d="m8 9 3 3-3 3" />
             </svg>
         </button>
-    </x-slot:navigationItems>
+    </x-slot:items>
 
     {{ $breadcrumbItems ?? '' }}
 

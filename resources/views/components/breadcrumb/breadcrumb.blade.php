@@ -1,8 +1,7 @@
-<div
-    class="sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 lg:px-8 sm:hidden dark:bg-gray-800 dark:border-gray-700">
+<div {{ $attributes->class('sticky top-0 inset-x-0 z-20 bg-white border-y px-4 sm:px-6 lg:px-8 dark:bg-gray-800 dark:border-gray-700') }}>
     <div class="flex items-center py-2">
         <!-- Navigation Toggle -->
-        {{ $navigationItems ?? '' }}
+        {{ $items ?? '' }}
         <!-- End Navigation Toggle -->
 
         <!-- Breadcrumb -->

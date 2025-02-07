@@ -1,3 +1,5 @@
+@props(['head','body'])
+
 <div class="flex flex-col">
     <div class="overflow-x-auto">
         <div class="min-w-full inline-block align-middle">
@@ -9,7 +11,19 @@
                 @endisset
                 <div class="overflow-hidden">
                     <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        {{ $slot }}
+
+                        @isset($head)
+                        <thead {{ $head->attributes->class('bg-gray-50 dark:bg-gray-700')}}>
+                            {{ $head }}
+                        </thead>
+                        @endisset
+
+                        @isset($body)
+                        <tbody {{ $body->attributes->merge(['class' => "divide-y divide-gray-200 dark:divide-gray-700"
+                            ]) }}>
+                            {{ $body }}
+                        </tbody>
+                        @endisset
                     </table>
                 </div>
 

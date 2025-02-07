@@ -18,6 +18,6 @@
         </div>
     </x-slot:header>
 
-    @each('temcom::partials.sidebar.menu-item', $temcom->menu('sidebar'), 'item')
+    @each('temcom::partials.sidebar.menu-item', $temcom->menu('navigation'), 'item')
 
 </x-temcom::sidebar.sidebar>

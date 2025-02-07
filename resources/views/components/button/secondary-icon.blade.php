@@ -4,6 +4,6 @@
     {{ $slot }}
 
     @if ($svg)
-        @svg($svg,'shrink-0 size-4 ml-2')
+        @svg($svg,'shrink-0 size-4')
     @endif
 </x-secondary-button>

@@ -43,21 +43,10 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Admin Panel Logo
-    |--------------------------------------------------------------------------
-    |
-    | Here you can change the application logo.
-    |
-    */
-
-    'logo' => 'Temcom',
-
-    /*
-    |--------------------------------------------------------------------------
     | Menu Items
     |--------------------------------------------------------------------------
     |
-    | Here we can modify the sidebar/top navigation of the menu.
+    | Here we can modify menus.
 
     |
     */
@@ -65,7 +54,7 @@ return [
 
     'menu' => [
 
-        'sidebar' => [
+        'navigation' => [
             [
                 'text' => 'Dashboard',
                 'icon' => 'fas-home',
@@ -73,7 +62,7 @@ return [
             ],
         ],
 
-        'account_dropdown' => [
+        'account' => [
             [
                 'text' => 'Profile',
                 'icon' => 'far-user-circle',
