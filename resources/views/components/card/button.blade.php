@@ -1,8 +1,13 @@
-@props(['icon' => 'fas-angle-right'])
+@props(['icon'])
 
-<buton {{ $attributes->merge(['class' => 'mt-3 inline-flex items-center gap-x-1 text-sm font-semibold rounded-lg border border-transparent text-blue-600
-decoration-2 hover:text-blue-700 hover:underline focus:underline focus:outline-none focus:text-blue-700
-disabled:opacity-50 disabled:pointer-events-none dark:text-blue-500 dark:hover:text-blue-600 dark:focus:text-blue-600']) }}>
+<button {{ $attributes->merge(['class' => 'py-2 px-3 inline-flex justify-center items-center gap-2 -ms-px
+    first:rounded-s-lg first:ms-0 last:rounded-e-lg text-sm
+    font-medium focus:z-10 border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none
+    focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-900 dark:border-gray-700
+    dark:text-white dark:hover:bg-gray-800 dark:focus:bg-gray-800']) }}>
     {{ $slot }}
-    @svg($icon,'hrink-0 size-4')
-</buton>
+
+    @isset($icon)
+    @svg($icon,'shrink-0 size-4')
+    @endisset
+</button>
