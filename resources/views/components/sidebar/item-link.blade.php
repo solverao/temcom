@@ -11,9 +11,9 @@ dark:text-gray-400 dark:hover:text-gray-300';
 
 <li>
     <a {{ $attributes->merge(['class' => $classes]) }}>
-        @if(filled($icon))
-        @svg($icon, 'size-4')
-        @endif
+        @isset($icon)
+        @svg($icon, 'shirnk-0 size-4')
+        @endisset
         {{ $slot }}
     </a>
 </li>

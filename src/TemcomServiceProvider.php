@@ -2,12 +2,12 @@
 
 namespace Solverao\Temcom;
 
-use Livewire\Livewire;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Solverao\Temcom\View\Components\Button;
 use Solverao\Temcom\Console\ConfigurePreline;
 use Solverao\Temcom\Console\InstallTemcomPackage;
-use Solverao\Temcom\Http\Livewire\TopNavigationMenu;
 
 class TemcomServiceProvider extends ServiceProvider
 {
@@ -18,24 +18,15 @@ class TemcomServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        // $this->loadTranslations();
         $this->loadViews();
-        // $this->loadMigrations();
-        // $this->loadRoutes();
+        $this->registerViewShare();
 
-        if ($this->app->runningInConsole()) {
-            $this->publishesConfig();
-            $this->publishesViews();
-            $this->registerCommands();
-            $this->publishesLayouts();
-            $this->publishesAssets();
+        $this->publishesConfig();
+        // $this->registerCommands();
 
-            // $this->publishesTransaltions();
-        }
-
-        $this->registerViewComposers();
-
-        $this->registerLivewireComponents();
+        Blade::components([
+            'button' => Button::class
+        ], 'temcom');
     }
 
     /**
@@ -48,28 +39,13 @@ class TemcomServiceProvider extends ServiceProvider
 
         // Register the main class to use with the facade
         $this->app->singleton('temcom', function () {
-            return new Temcom;
+            return new Temcom(config('temcom.filters', []));
         });
     }
 
     private function loadViews()
     {
-        $this->loadViewsFrom(__DIR__ . '/../resources/views', $this->pkgPrefix);
-    }
-
-    private function loadTranslations()
-    {
-        $this->loadTranslationsFrom(__DIR__ . '/../resources/lang', $this->pkgPrefix);
-    }
-
-    private function loadMigrations()
-    {
-        $this->loadMigrationsFrom(__DIR__ . '/../database/migrations');
-    }
-
-    private function loadRoutes()
-    {
-        $this->loadRoutesFrom(__DIR__ . '/routes.php');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'temcom');
     }
 
     private function registerCommands()
@@ -87,48 +63,8 @@ class TemcomServiceProvider extends ServiceProvider
         ], 'temcom:config');
     }
 
-    private function publishesViews()
+    private function registerViewShare()
     {
-        $this->publishes([
-            __DIR__ . '/../resources/views' => resource_path('views/vendor/temcom'),
-        ], 'temcom:views');
+        View::share('temcom', new Temcom(config('temcom.filters', [])));
     }
-
-    private function publishesTransaltions()
-    {
-        $this->publishes([
-            __DIR__ . '/../resources/lang' => resource_path('lang/vendor/temcom'),
-        ], 'temcom:lang');
-    }
-
-    private function publishesAssets()
-    {
-            $this->publishes([
-                __DIR__ . '/../resources/js' => public_path('vendor/temcom/js'),
-            ], 'temcom:assets');
-    }
-
-
-    private function publishesLayouts()
-    {
-        $this->publishes([
-            __DIR__ . '/../resources/views/layouts/app.blade.php' => resource_path('views/layouts/app.blade.php'),
-        ], 'temcom:layout-app');
-
-        $this->publishes([
-            __DIR__ . '/../resources/views/layouts/guest.blade.php' => resource_path('views/layouts/guest.blade.php'),
-        ], 'temcom:layout-guest');
-    }
-
-    private function registerViewComposers()
-    {
-        View::composer('temcom::page', function (\Illuminate\View\View $v) {
-            $v->with('temcom', $this->app->make(Temcom::class));
-        });
-    }
-
-    Private function registerLivewireComponents(){
-        //
-    }
-
 }

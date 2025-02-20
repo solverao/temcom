@@ -3,14 +3,15 @@
 namespace Solverao\Temcom\Console;
 
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Facades\File;
-use RuntimeException;
-use Symfony\Component\Process\Process;
+use Solverao\Temcom\Traits\HasCommand;
 
 class InstallTemcomPackage extends Command
 {
-    protected $signature = 'temcom:install {--layout : Indicate that layouts should be installed.}
-                                            {--only_layout : To install only specific resources: assets, config, translations, auth_views, auth_routes, main_views or components.}';
+    use HasCommand;
+
+    protected $signature = 'temcom:install {--layout : Indicate that layouts should be installed.}';
 
     protected $description = 'Install the temcom package';
 
@@ -18,27 +19,21 @@ class InstallTemcomPackage extends Command
     {
         $this->info('Installing temcom package...');
 
-        if ($this->option('only_layout')) {
-            $this->publishingAppLayout(true);
-            $this->publishingGuestLayout(true);
-            return;
-        }
-
-        if ($this->option('layout')) {
-            $this->publishingAppLayout(true);
-            $this->publishingGuestLayout(true);
-        }
-
         $this->publishingConfigurationFile();
-        
-        $this->installingJetstream();
 
-        // $this->info('Ejecutando migraciones...');
-        // $this->call('migrate');
+        $this->npmPackages();
 
-        $this->info('Installing NPM Dependencies...');
-        $this->call('temcom:config:preline');    // // exec('npm nstall preline');
-        $this->runCommands(['npm install preline', 'npm run build']);
+        $this->tailwindConfiguration();
+
+        $this->configComponents();
+
+        $this->configLayouts();
+
+        $this->copySingleDirectoires();
+
+        $this->call('temcom:config:preline');
+
+        $this->runCommands(['npm install', 'npm run build']);
 
         $this->info('Installed temcom package');
     }
@@ -59,17 +54,6 @@ class InstallTemcomPackage extends Command
                 $this->info('Existing configuration was not overwritten');
             }
         }
-    }
-
-    function installingJetstream()
-    {
-        $this->info('Installing Jetstream with Livewire...');
-        // Jetstream install
-        $this->call('jetstream:install', [
-            'stack' => 'livewire',
-            '--dark' => true,
-            '--pest' => true,
-        ]);
     }
 
     private function shouldOverwriteConfig()
@@ -94,42 +78,75 @@ class InstallTemcomPackage extends Command
         $this->callSilent('vendor:publish', $params);
     }
 
-    protected function runCommands($commands)
+    private function npmPackages()
     {
-        $process = Process::fromShellCommandline(implode(' && ', $commands), null, null, null, null);
-
-        $process->run(function ($type, $line) {
-            $this->info('    ' . $line);
+        $this->updateNodePackages(function ($packages) {
+            return [
+                '@tailwindcss/forms' => '^0.5.7',
+                '@tailwindcss/typography' => '^0.5.10',
+                'autoprefixer' => '^10.4.16',
+                'postcss' => '^8.4.32',
+                'tailwindcss' => '^3.4.0',
+            ] + $packages;
         });
     }
 
-    private function publishingAppLayout($forcePublish  = false)
+    private function tailwindConfiguration()
     {
-        $this->info('Publishing app layout...');
-
-        $params = [
-            '--tag' => "temcom:layout-app",
-        ];
-
-        if ($forcePublish === true) {
-            $params['--force'] = true;
-        }
-
-        $this->call('vendor:publish', $params);
+        copy(__DIR__ . '/../../stubs/tailwind.config.js', base_path('tailwind.config.js'));
+        copy(__DIR__ . '/../../stubs/postcss.config.js', base_path('postcss.config.js'));
+        copy(__DIR__ . '/../../stubs/vite.config.js', base_path('vite.config.js'));
     }
 
-    private function publishingGuestLayout($forcePublish = false)
+    private function copySingleDirectoires()
     {
-        $this->info('Publishing guest layout...');
+        // copy(__DIR__ . '/../../stubs/resources/views/dashboard.blade.php', resource_path('views/dashboard.blade.php'));
+        // copy(__DIR__ . '/../../stubs/resources/views/navigation-menu.blade.php', resource_path('views/navigation-menu.blade.php'));
+        // copy(__DIR__ . '/../../stubs/resources/views/terms.blade.php', resource_path('views/terms.blade.php'));
+        // copy(__DIR__ . '/../../stubs/resources/views/policy.blade.php', resource_path('views/policy.blade.php'));
+    }
 
-        $params = [
-            '--tag' => "temcom:layout-guest",
-        ];
+    private function configComponents()
+    {
+        (new Filesystem)->ensureDirectoryExists(app_path('View/Components'));
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/components'));
 
-        if ($forcePublish === true) {
-            $params['--force'] = true;
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/resources/views/components', resource_path('views/components'));
+    }
+
+    private function configLayouts()
+    {
+        (new Filesystem)->ensureDirectoryExists(resource_path('views/layouts'));
+
+        // View Components...
+        copy(__DIR__ . '/../../stubs/app/View/Components/AppLayout.php', app_path('View/Components/AppLayout.php'));
+        copy(__DIR__ . '/../../stubs/app/View/Components/GuestLayout.php', app_path('View/Components/GuestLayout.php'));
+        copy(__DIR__ . '/../../stubs/app/View/Components/FixedSidebarLayout.php', app_path('View/Components/FixedSidebarLayout.php'));
+
+        // Layouts...
+        (new Filesystem)->copyDirectory(__DIR__ . '/../../stubs/resources/views/layouts', resource_path('views/layouts'));
+    }
+
+    private static function updateNodePackages(callable $callback, $dev = true)
+    {
+        if (! file_exists(base_path('package.json'))) {
+            return;
         }
 
-        $this->call('vendor:publish', $params);
+        $configurationKey = $dev ? 'devDependencies' : 'dependencies';
+
+        $packages = json_decode(file_get_contents(base_path('package.json')), true);
+
+        $packages[$configurationKey] = $callback(
+            array_key_exists($configurationKey, $packages) ? $packages[$configurationKey] : [],
+            $configurationKey
+        );
+
+        ksort($packages[$configurationKey]);
+
+        file_put_contents(
+            base_path('package.json'),
+            json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . PHP_EOL
+        );
     }
 }

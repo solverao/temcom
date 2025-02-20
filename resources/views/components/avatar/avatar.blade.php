@@ -1,4 +1,4 @@
-@props(['src','alt'])
+@props(['src','alt','size' => 'size-8'])
 
-<img {{ $attributes->class('size-8 rounded-full object-cover') }} src="{{ $src }}"
-    alt="{{ $alt }}" />
+<img {{ $attributes->class("inline-block $size rounded-full") }} src="{{ $src }}"
+alt="{{ $alt }}" />

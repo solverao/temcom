@@ -3,9 +3,12 @@
 namespace Solverao\Temcom\Console;
 
 use Illuminate\Console\Command;
+use Solverao\Temcom\Traits\HasCommand;
 
 class ConfigurePreline extends Command
 {
+    use HasCommand;
+
     protected $signature = 'temcom:config:preline';
 
     protected $description = 'Configure the preline package';
@@ -62,6 +65,8 @@ class ConfigurePreline extends Command
             file_put_contents($tailwindConfigPath, $content);
             $this->info("Added preline to tailwind.config.js");
         }
+
+        $this->runCommands(['npm install preline']);
 
         $this->info("Complete preline configuration");
     }

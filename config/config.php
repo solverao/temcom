@@ -51,23 +51,23 @@ return [
     |
     */
 
-
     'menu' => [
-
-        'navigation' => [
-            [
-                'text' => 'Dashboard',
-                'icon' => 'fas-home',
-                'route' => 'dashboard',
-            ],
+        ['header' => 'account_settings'],
+        [
+            'text' => 'Dashboard',
+            'icon' => 'fas-home',
+            'route' => 'dashboard',
         ],
-
-        'account' => [
-            [
-                'text' => 'Profile',
-                'icon' => 'far-user-circle',
-                'route' => 'profile.show',
-            ],
-        ]
+        [
+            'text' => 'Profile',
+            'icon' => 'far-user-circle',
+            'route' => 'profile.show',
+            'topnav_user' => true
+        ],
     ],
+
+    'filters' => [
+        Solverao\Temcom\Menu\Filters\GateFilter::class,
+    ],
+
 ];
