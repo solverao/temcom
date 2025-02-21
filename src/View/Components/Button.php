@@ -9,20 +9,16 @@ use Solverao\Temcom\Helpers\UtilsHelper;
 
 class Button extends Component
 {
-    public string $classes;
-
     public function __construct(
         public ?string $label = null,
         public string $type = 'button',
-        public string $theme = 'primary',
+        public string $theme = 'dark',
         public string $style = 'solid',
         public string $size = 'default',
         public string $rounded = 'lg',
         public ?string $icon = null
     ) {
         $this->label = UtilsHelper::applyHtmlEntityDecoder($label);
-
-        $this->classes = ButtonStyle::tryFrom($this->style)->classes($this->theme); // Asignar el color
     }
 
     /**
@@ -30,6 +26,12 @@ class Button extends Component
      */
     public function render(): View
     {
-        return view("temcom::components.button.button");
+        $styleButton = match ($this->style) {
+            'solid' => 'solid',
+            'outline' => 'outline',
+            default => 'solid'
+        };
+
+        return view("temcom::components.button.{$styleButton}");
     }
 }
