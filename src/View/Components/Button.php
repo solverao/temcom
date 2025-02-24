@@ -29,6 +29,7 @@ class Button extends Component
         $styleButton = match ($this->style) {
             'solid' => 'solid',
             'outline' => 'outline',
+            'ghost' => 'ghost',
             default => 'solid'
         };
 
